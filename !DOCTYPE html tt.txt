@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum de Ideias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f5f5f5;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            resize: vertical;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            max-width: 300px;
+            border-radius: 8px;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #333;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-small:hover {
+            border-color: #667eea;
+            background: #f5f5f5;
+            color: #667eea;
+        }
+
+        .btn-small.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .post {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .post-author {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .post-time {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 8px;
+            margin: 15px 0;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: #666;
+            padding: 4px 8px;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .comment {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 13px;
+        }
+
+        .comment-text {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .comment-input button {
+            padding: 8px 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3c3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .repost-badge {
+            background: #e8f0ff;
+            color: #667eea;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 22px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .post {
+                padding: 15px;
+            }
+
+            .post-actions {
+                gap: 5px;
+            }
+
+            .btn-small {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💡 Fórum de Ideias</h1>
+            <div class="user-info">
+                👤 <span id="userName">Usuário</span>
+            </div>
+        </header>
+
+        <div id="message" class="form-section" style="display: none;"></div>
+
+        <div class="form-section">
+            <h2 style="margin-bottom: 20px; color: #667eea; font-size: 18px;">Compartilhe sua ideia</h2>
+            <div class="form-group">
+                <label for="authorInput">Seu nome</label>
+                <input type="text" id="authorInput" placeholder="Digite seu nome...">
+            </div>
+            <div class="form-group">
+                <label for="contentInput">Sua ideia</label>
+                <textarea id="contentInput" placeholder="Conte ao mundo sua ideia incrível..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="imageInput">Adicionar imagem (opcional)</label>
+                <input type="file" id="imageInput" accept="image/*">
+                <img id="imagePreview" class="image-preview" style="display: none;">
+            </div>
+            <button class="btn btn-primary" onclick="submitPost()">Publicar 🚀</button>
+        </div>
+
+        <div id="postsContainer">
+            <div class="empty-state">
+                <div class="spinner"></div>
+                <p>Carregando ideias...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="commentsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Comentários</h2>
+                <button class="close-btn" onclick="closeCommentsModal()">&times;</button>
+            </div>
+            <div id="commentsContainer"></div>
+            <div class="comment-input">
+                <input type="text" id="newCommentInput" placeholder="Adicione um comentário...">
+                <button class="btn btn-small" onclick="addComment()" style="border: none; background: #667eea; color: white;">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração da API do Google Sheets
+        const GOOGLE_APPS_SCRIPT_URL = 'INSIRA_SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI';
+        let currentPostId = null;
+        let postsData = [];
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedUserName = localStorage.getItem('userName');
+            if (savedUserName) {
+                document.getElementById('authorInput').value = savedUserName;
+                document.getElementById('userName').textContent = savedUserName;
+            }
+            loadPosts();
+        });
+
+        // Manipular preview de imagem
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Publicar post
+        function submitPost() {
+            const author = document.getElementById('authorInput').value.trim();
+            const content = document.getElementById('contentInput').value.trim();
+            const imageInput = document.getElementById('imageInput');
+
+            if (!author) {
+                showMessage('Por favor, digite seu nome', 'error');
+                return;
+            }
+            if (!content) {
+                showMessage('Por favor, compartilhe sua ideia', 'error');
+                return;
+            }
+
+            localStorage.setItem('userName', author);
+            document.getElementById('userName').textContent = author;
+
+            const postData = {
+                author: author,
+                content: content,
+                timestamp: new Date().toISOString(),
+                likes: 0,
+                reposts: 0,
+                comments: []
+            };
+
+            // Se houver imagem, converter para base64
+            if (imageInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    postData.image = event.target.result;
+                    savePost(postData);
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                savePost(postData);
+            }
+        }
+
+        // Salvar post no Google Sheets
+        function savePost(postData) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = '📤 Publicando...';
+            messageDiv.style.display = 'block';
+
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'addPost',
+                    post: postData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage('✅ Ideia publicada com sucesso!', 'success');
+                    document.getElementById('contentInput').value = '';
+                    document.getElementById('imageInput').value = '';
+                    document.getElementById('imagePreview').style.display = 'none';
+                    loadPosts();
+                } else {
+                    showMessage('❌ Erro ao publicar: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showMessage('❌ Erro de conexão. Verifique a URL do Apps Script.', 'error');
+            });
+        }
+
+        // Carregar posts
+        function loadPosts() {
+            const container = document.getElementById('postsContainer');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Carregando...</p></div>';
+
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'getPosts' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.posts) {
+                    postsData = data.posts.reverse(); // Posts mais recentes primeiro
+                    renderPosts();
+                } else {
+                    container.innerHTML = '<div class="empty-state"><p>Nenhuma ideia publicada ainda. Seja o primeiro! 🚀</p></div>';
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                container.innerHTML = '<div class="empty-state"><p>Erro ao carregar posts. Verifique a URL do Apps Script.</p></div>';
+            });
+        }
+
+        // Renderizar posts
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            if (postsData.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Nenhuma ideia publicada ainda. Seja o primeiro! 🚀</p></div>';
+                return;
+            }
+
+            container.innerHTML = postsData.map((post, index) => `
+                <div class="post">
+                    ${post.repostedBy ? `<div class="repost-badge">🔄 Repostado por ${post.repostedBy}</div>` : ''}
+                    <div class="post-header">
+                        <div>
+                            <div class="post-author">${escapeHtml(post.author)}</div>
+                            <div class="post-time">${formatTime(post.timestamp)}</div>
+                        </div>
+                        <button class="btn-small" onclick="repostModal(${index})">⤴️ Repostar</button>
+                    </div>
+                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    ${post.image ? `<img src="${post.image}" class="post-image" alt="Imagem do post">` : ''}
+                    <div class="post-actions">
+                        <button class="btn-small ${isLiked(post, index) ? 'active' : ''}" onclick="toggleLike(${index})">
+                            ❤️ <span id="likes-${index}">${post.likes || 0}</span>
+                        </button>
+                        <button class="btn-small" onclick="openCommentsModal(${index})">
+                            💬 <span id="comments-${index}">${(post.comments || []).length}</span>
+                        </button>
+                        <button class="btn-small" onclick="copyLink('${encodeURIComponent(JSON.stringify(post))}')">
+                            🔗 Copiar
+                        </button>
+                    </div>
+                    ${(post.comments && post.comments.length > 0) ? `
+                        <div class="comments-section">
+                            <strong style="color: #667eea;">Comentários recentes:</strong>
+                            ${post.comments.slice(0, 2).map(comment => `
+                                <div class="comment">
+                                    <div class="comment-author">${escapeHtml(comment.author)}</div>
+                                    <div class="comment-text">${escapeHtml(comment.text)}</div>
+                                    <div class="comment-time">${formatTime(comment.timestamp)}</div>
+                                </div>
+                            `).join('')}
+                            ${post.comments.length > 2 ? `<p style="text-align: center; color: #999; font-size: 13px; margin-top: 10px;">+${post.comments.length - 2} mais comentários</p>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Curtir post
+        function toggleLike(index) {
+            const post = postsData[index];
+            post.likes = (post.likes || 0) + 1;
+            const key = `liked-post-${index}`;
+            if (!localStorage.getItem(key)) {
+                localStorage.setItem(key, 'true');
+                updatePost(index);
+            }
+        }
+
+        // Verificar se usuário curtiu
+        function isLiked(post, index) {
+            return localStorage.getItem(`liked-post-${index}`) === 'true';
+        }
+
+        // Repostar modal
+        function repostModal(index) {
+            const post = postsData[index];
+            const userName = document.getElementById('authorInput').value || 'Usuário';
+            if (!userName) {
+                showMessage('Por favor, digite seu nome primeiro', 'error');
+                return;
+            }
+            const confirmRepost = confirm(`Deseja repostar a ideia de "${post.author}"?`);
+            if (confirmRepost) {
+                repost(index);
+            }
+        }
+
+        // Repostar
+        function repost(index) {
+            const post = JSON.parse(JSON.stringify(postsData[index]));
+            const userName = document.getElementById('authorInput').value;
+            post.repostedBy = userName;
+            post.repostedAt = new Date().toISOString();
+
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'addPost',
+                    post: post
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage('✅ Ideia repostada com sucesso!', 'success');
+                    loadPosts();
+                } else {
+                    showMessage('❌ Erro ao repostar', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                showMessage('❌ Erro de conexão', 'error');
+            });
+        }
+
+        // Abrir modal de comentários
+        function openCommentsModal(index) {
+            currentPostId = index;
+            const post = postsData[index];
+            const container = document.getElementById('commentsContainer');
+
+            if (post.comments && post.comments.length > 0) {
+                container.innerHTML = post.comments.map(comment => `
+                    <div class="comment">
+                        <div class="comment-author">${escapeHtml(comment.author)}</div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                        <div class="comment-time">${formatTime(comment.timestamp)}</div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Nenhum comentário ainda. Seja o primeiro!</p>';
+            }
+
+            document.getElementById('commentsModal').classList.add('active');
+            document.getElementById('newCommentInput').focus();
+        }
+
+        // Fechar modal
+        function closeCommentsModal() {
+            document.getElementById('commentsModal').classList.remove('active');
+            document.getElementById('newCommentInput').value = '';
+            currentPostId = null;
+        }
+
+        // Adicionar comentário
+        function addComment() {
+            const commentText = document.getElementById('newCommentInput').value.trim();
+            const author = document.getElementById('authorInput').value.trim();
+
+            if (!author) {
+                showMessage('Por favor, digite seu nome', 'error');
+                return;
+            }
+            if (!commentText) {
+                showMessage('Por favor, escreva um comentário', 'error');
+                return;
+            }
+
+            const post = postsData[currentPostId];
+            if (!post.comments) post.comments = [];
+
+            post.comments.push({
+                author: author,
+                text: commentText,
+                timestamp: new Date().toISOString()
+            });
+
+            updatePost(currentPostId);
+            document.getElementById('newCommentInput').value = '';
+            openCommentsModal(currentPostId);
+        }
+
+        // Atualizar post
+        function updatePost(index) {
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'updatePost',
+                    index: index,
+                    post: postsData[index]
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    renderPosts();
+                } else {
+                    console.error('Erro ao atualizar:', data.message);
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+
+        // Copiar link
+        function copyLink(postData) {
+            const link = `${window.location.href}?post=${postData}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showMessage('✅ Link copiado!', 'success');
+            });
+        }
+
+        // Mostrar mensagem
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Formatar tempo
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'agora';
+            if (diffMins < 60) return `${diffMins}m atrás`;
+            if (diffHours < 24) return `${diffHours}h atrás`;
+            if (diffDays < 7) return `${diffDays}d atrás`;
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        // Escapar HTML
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('commentsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCommentsModal();
+            }
+        });
+
+        // Atualizar posts a cada 5 segundos
+        setInterval(loadPosts, 5000);
+    </script>
+</body>
+</html>
